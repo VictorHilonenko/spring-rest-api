@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -30,29 +31,32 @@ public class ProductController {
     public ResponseEntity<Product> findById(@PathVariable int id) {
         return ResponseEntity
                 .status(HttpStatus.FOUND)
-                .body(productService.findById(id));
+                .body(
+                    productService.findById(id)
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND))
+                );
     }
 
     @PostMapping
-    public ResponseEntity saveUser(@RequestBody Product product) {
-        int id = productService.save(product);
+    public ResponseEntity save(@RequestBody Product product) {
+        Product resProduct = productService.save(product);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(id);
+                .body(resProduct);
     }
 
     @PutMapping
-    public ResponseEntity updateUser(@RequestBody Product product) {
-        int id = productService.update(product);
+    public ResponseEntity update(@RequestBody Product product) {
+        Product resProduct = productService.update(product);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(id);
+                .body(resProduct);
     }
 
     @DeleteMapping(path = "/{id}", produces = "application/json")
-    public ResponseEntity deleteUser(@PathVariable int id) {
+    public ResponseEntity delete(@PathVariable int id) {
         productService.delete(id);
 
         return ResponseEntity

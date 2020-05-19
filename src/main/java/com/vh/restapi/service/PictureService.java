@@ -1,36 +1,40 @@
 package com.vh.restapi.service;
 
 import com.vh.restapi.entity.Picture;
+import com.vh.restapi.repository.PictureRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PictureService {
+    private PictureRepository pictureRepository;
+
+    @Autowired
+    public PictureService(PictureRepository pictureRepository) {
+        this.pictureRepository = pictureRepository;
+    }
+
 
     public List<Picture> findAll() {
-        List<Picture> pictures = new ArrayList<>();
-        Picture picture1 = new Picture(1, "path", "comment");
-        Picture picture2 = new Picture(2, "path", "comment");
-        pictures.add(picture1);
-        pictures.add(picture2);
-        return pictures;
+        return pictureRepository.findAll();
     }
 
-    public Picture findById(int id) {
-        return new Picture(1, "path", "comment");
+    public Optional<Picture> findById(int id) {
+        return pictureRepository.findById(id);
     }
 
-    public int save(Picture picture) {
-        return 1;
+    public Picture save(Picture picture) {
+        return pictureRepository.save(picture);
     }
 
-    public int update(Picture picture) {
-        return 1;
+    public Picture update(Picture picture) {
+        return pictureRepository.save(picture);
     }
 
     public void delete(int id) {
-        //
+        pictureRepository.deleteById(id);
     }
 }
