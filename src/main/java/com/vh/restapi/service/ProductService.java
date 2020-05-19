@@ -1,38 +1,39 @@
 package com.vh.restapi.service;
 
-import com.vh.restapi.entity.Picture;
 import com.vh.restapi.entity.Product;
+import com.vh.restapi.repository.ProductRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProductService {
+    private ProductRepository productRepository;
+
+    @Autowired
+    public ProductService(ProductRepository productRepository) {
+        this.productRepository = productRepository;
+    }
 
     public List<Product> findAll() {
-        List<Product> products = new ArrayList<>();
-        Product product1 = new Product(1, "test 1", "123456789", Arrays.asList(new Picture(1, "path", "comment")));
-        Product product2 = new Product(2, "test 1", "123456789", Arrays.asList(new Picture(1, "path", "comment")));
-        products.add(product1);
-        products.add(product2);
-        return products;
+        return productRepository.findAll();
     }
 
-    public Product findById(int id) {
-        return new Product(1, "test 1", "123456789", Arrays.asList(new Picture(1, "path", "comment")));
+    public Optional<Product> findById(int id) {
+        return productRepository.findById(id);
     }
 
-    public int save(Product product) {
-        return 1;
+    public Product save(Product product) {
+        return productRepository.save(product);
     }
 
-    public int update(Product product) {
-        return 1;
+    public Product update(Product product) {
+        return productRepository.save(product);
     }
 
     public void delete(int id) {
-        //
+        productRepository.deleteById(id);
     }
 }

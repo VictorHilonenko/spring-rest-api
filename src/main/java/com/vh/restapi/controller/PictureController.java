@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -30,29 +31,32 @@ public class PictureController {
     public ResponseEntity<Picture> findById(@PathVariable int id) {
         return ResponseEntity
                 .status(HttpStatus.FOUND)
-                .body(pictureService.findById(id));
+                .body(
+                        pictureService.findById(id)
+                                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND))
+                );
     }
 
     @PostMapping
-    public ResponseEntity saveUser(@RequestBody Picture picture) {
-        int id = pictureService.save(picture);
+    public ResponseEntity save(@RequestBody Picture picture) {
+        Picture resPicture = pictureService.save(picture);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(id);
+                .body(resPicture);
     }
 
     @PutMapping
-    public ResponseEntity updateUser(@RequestBody Picture picture) {
-        int id = pictureService.update(picture);
+    public ResponseEntity update(@RequestBody Picture picture) {
+        Picture resPicture = pictureService.update(picture);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(id);
+                .body(resPicture);
     }
 
     @DeleteMapping(path = "/{id}", produces = "application/json")
-    public ResponseEntity deleteUser(@PathVariable int id) {
+    public ResponseEntity delete(@PathVariable int id) {
         pictureService.delete(id);
 
         return ResponseEntity
